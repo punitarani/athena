@@ -6,9 +6,9 @@ from typing import BinaryIO
 import nest_asyncio
 import streamlit as st
 
-from athena.llm.research import run_agent
-
 nest_asyncio.apply()
+
+from athena.llm.research import run_agent
 
 st.set_page_config(page_title="Notes", page_icon="🌍", layout="wide")
 st.title("Athena Research Studio")
