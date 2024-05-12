@@ -15,7 +15,7 @@ async def run_agent(agent: str, prompt: str, context: str | list[str]) -> str:
     if agent == "analyze":
         return await analyze_texts(task=prompt, texts=context)
 
-    if agent == "memory":
+    if agent == "research":
         return await search_memory(question=prompt, n=10)
 
     if agent == "web":
@@ -24,7 +24,7 @@ async def run_agent(agent: str, prompt: str, context: str | list[str]) -> str:
     if agent == "wiki":
         return await search_wiki(question=prompt)
 
-    if agent == "research":
+    if agent == "papers":
         return await summarize_papers(topic=prompt)
 
     if agent == "write":

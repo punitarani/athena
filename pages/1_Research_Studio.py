@@ -26,10 +26,10 @@ def parse_prompt(_prompt: str) -> tuple[str | None, str]:
         _agent, _prompt = _prompt[1:].split(" ", 1)
         if _agent.lower() not in [
             "analyze",
-            "memory",
+            "research",
             "web",
             "wiki",
-            "research",
+            "papers",
             "write",
         ]:
             _agent = None
