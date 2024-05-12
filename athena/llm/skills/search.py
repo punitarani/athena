@@ -18,25 +18,27 @@ Your task is to answer the following question accurately and in extreme detail u
 async def search_web(question: str) -> str:
     """Search the internet for the answer to a question."""
 
-    prediction = await cohere.chat(
+    web_search = await cohere.chat(
         message=question,
         preamble=SEARCH_WEB_PREAMBLE,
-        model="command-r-plus",
+        model="command-r",
         connectors=[{"id": "web-search"}],
         temperature=0.2,
         stream=False,
         citation_quality="accurate",
     )
-    return prediction.text
+    sources = [document["url"] for document in web_search.documents]
+    sources_text = "\n\n".join([f"> {source}" for source in sources])
+    return web_search.text + f"\n\n{sources_text}"
 
 
 async def search_wiki(question: str) -> str:
     """Search Wikipedia for the answer to a question."""
 
-    prediction = await cohere.chat(
+    wiki_search = await cohere.chat(
         message=question,
         preamble=SEARCH_WIKI_PREAMBLE,
-        model="command-r-plus",
+        model="command-r",
         connectors=[
             {"id": "web-search", "options": {"site": "https://www.wikipedia.org/"}}
         ],
@@ -44,7 +46,9 @@ async def search_wiki(question: str) -> str:
         stream=False,
         citation_quality="accurate",
     )
-    return prediction.text
+    sources = [document["url"] for document in wiki_search.documents]
+    sources_text = "\n\n".join([f"> {source}" for source in sources])
+    return wiki_search.text + f"\n\n{sources_text}"
 
 
 async def search_memory(question: str, n: int = 10) -> str:
@@ -59,16 +63,20 @@ async def search_memory(question: str, n: int = 10) -> str:
         namespace="papers",
     )
 
-    chat = await cohere.chat(
-        model="command-r-plus",
+    memory_search = await cohere.chat(
+        model="command-r",
         message=question,
         documents=[
-            {"title": str(doc["metadata"]["doi"]), "snippet": doc["metadata"]["text"]}
+            {
+                "title": f"[{doc['metadata']['title']}]({doc['metadata']['work_id']})",
+                "snippet": doc["metadata"]["text"],
+            }
             for doc in docs.get("matches", [])
         ],
         temperature=0.2,
         stream=False,
         citation_quality="accurate",
     )
-
-    return chat.text
+    sources = [document["title"] for document in memory_search.documents]
+    sources_text = "\n\n".join([f"> {source}" for source in sources])
+    return memory_search.text + f"\n\n{sources_text}"
