@@ -1,7 +1,7 @@
 # Makefile
 
 # List of directories and files to format and lint
-TARGETS = athena/
+TARGETS = athena/ pages/
 
 # Format code using isort and black
 format:
