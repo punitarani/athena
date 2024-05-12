@@ -2,7 +2,9 @@
 
 import json
 
-from athena.llm.client import openai
+from tenacity import retry, stop_after_attempt
+
+from athena.llm.client import groq, openai
 
 PLANNER_SYSTEM_PROMPT = """
 You are a scientist working on a research project with a specific task (a small part of a larger research objective).
@@ -47,6 +49,42 @@ assistant:
 
 [END EXAMPLE]
 """.strip()
+
+
+@retry(stop=stop_after_attempt(5))
+async def planner(task: str, context: str = None) -> dict[str, str]:
+    """
+    Plan the next research task based on the objective and context information.
+
+    Args:
+        task (str): The research objective.
+        context (str): The context information to plan the next research task.
+    """
+    messages = [
+        {"role": "system", "content": PLANNER_SYSTEM_PROMPT},
+    ]
+
+    if context:
+        messages.append({"role": "user", "content": context})
+
+    messages.append({"role": "user", "content": task})
+
+    response = await groq.chat.completions.create(
+        model="llama-8b-8192",
+        messages=messages,
+        response_format={"type": "json_object"},
+        temperature=0.2,
+    )
+
+    plan = json.loads(response.choices[0].message.content).get("plan", [])
+
+    if len(plan) > 0:
+        return plan[0]
+    else:
+        return {
+            "agent": "write",
+            "task": "Write a detailed report on the given objective.",
+        }
 
 
 async def research_planner(task: str, context: str = None) -> dict[str, str]:
