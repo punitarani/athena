@@ -10,7 +10,7 @@ from athena.llm.research import run_agent
 
 nest_asyncio.apply()
 
-st.set_page_config(page_title="Notes", page_icon="🌍")
+st.set_page_config(page_title="Notes", page_icon="🌍", layout="wide")
 st.title("Athena Research Studio")
 
 
@@ -43,7 +43,7 @@ if "uploaded_notes" not in st.session_state:
 
 with st.sidebar:
     uploaded_files = st.file_uploader(
-        "Upload Markdown Files", type=["md"], accept_multiple_files=True
+        "Upload Notes", type=["md"], accept_multiple_files=True
     )
 
     if uploaded_files:
@@ -77,12 +77,6 @@ for message in st.session_state.messages:
 
 if prompt_input := st.chat_input():
     agent, prompt = parse_prompt(prompt_input)
-    if agent:
-        st.session_state.messages.append(
-            {"role": "user", "agent": agent, "prompt": prompt}
-        )
-    else:
-        st.session_state.messages.append({"role": "user", "prompt": prompt})
 
     running_text = f"Running: {prompt}"
     if agent:
@@ -91,6 +85,16 @@ if prompt_input := st.chat_input():
         agent_response = asyncio.run(
             run_agent(agent, prompt, st.session_state["context"])
         )
+
+        # Add user messages to the chat history
+        if agent:
+            st.session_state.messages.append(
+                {"role": "user", "agent": agent, "prompt": prompt}
+            )
+        else:
+            st.session_state.messages.append({"role": "user", "prompt": prompt})
+
+        # Add assistant messages to the chat history
         st.session_state.messages.append(
             {"role": "assistant", "prompt": agent_response}
         )
