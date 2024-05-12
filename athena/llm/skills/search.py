@@ -6,12 +6,12 @@ from athena.store.vector import pc_papers
 
 SEARCH_WEB_PREAMBLE = """
 You are a scientist with access to the internet.
-Your task is to answer the following question concisely and accurately using web-search.
+Your task is to answer the following question accurately and in extreme detail using web-search.
 """.strip()
 
 SEARCH_WIKI_PREAMBLE = """
 You are a scientist with access to Wikipedia.
-Your task is to answer the following question concisely and accurately using information from Wikipedia.
+Your task is to answer the following question accurately and in extreme detail using information from Wikipedia.
 """.strip()
 
 
@@ -22,11 +22,10 @@ async def search_web(question: str) -> str:
         message=question,
         preamble=SEARCH_WEB_PREAMBLE,
         model="command-r-plus",
+        connectors=[{"id": "web-search"}],
         temperature=0.2,
         stream=False,
         citation_quality="accurate",
-        connectors=[{"id": "web-search"}],
-        documents=[],
     )
     return prediction.text
 
@@ -38,13 +37,12 @@ async def search_wiki(question: str) -> str:
         message=question,
         preamble=SEARCH_WIKI_PREAMBLE,
         model="command-r-plus",
-        temperature=0.2,
-        stream=False,
-        citation_quality="accurate",
         connectors=[
             {"id": "web-search", "options": {"site": "https://www.wikipedia.org/"}}
         ],
-        documents=[],
+        temperature=0.2,
+        stream=False,
+        citation_quality="accurate",
     )
     return prediction.text
 
@@ -69,6 +67,8 @@ async def search_memory(question: str, n: int = 10) -> str:
             for doc in docs.get("matches", [])
         ],
         temperature=0.2,
+        stream=False,
+        citation_quality="accurate",
     )
 
     return chat.text
