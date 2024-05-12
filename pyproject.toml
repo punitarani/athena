@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11 <3.12"
+aiolimiter = "^1.1.0"
 cohere = "^4.50"
 httpx = "^0.27.0"
 jupyter = "^1.0.0"
