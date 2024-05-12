@@ -38,7 +38,7 @@ async def search_wiki(question: str) -> str:
         message=question,
         preamble=SEARCH_WIKI_PREAMBLE,
         model="command-r-plus",
-        temperature=0,
+        temperature=0.2,
         stream=False,
         citation_quality="accurate",
         connectors=[
@@ -68,6 +68,7 @@ async def search_memory(question: str, n: int = 10) -> str:
             {"title": str(doc["metadata"]["doi"]), "snippet": doc["metadata"]["text"]}
             for doc in docs.get("matches", [])
         ],
+        temperature=0.2,
     )
 
     return chat.text
