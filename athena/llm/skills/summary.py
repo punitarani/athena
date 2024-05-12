@@ -3,7 +3,6 @@
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain.prompts import PromptTemplate
-
 from langchain_groq import ChatGroq
 
 prompt_template = """Write a concise summary of the following:

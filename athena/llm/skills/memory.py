@@ -20,18 +20,21 @@ async def search_memory(question: str, n: int = 10) -> str:
     # Create a string of papers
     papers = [
         f"{doc['metadata']['title']}\n{doc['metadata']['text']}"
-        for doc in docs['matches']
+        for doc in docs["matches"]
     ]
 
     # Create a response from the LLM model
     response = groq.chat.completions.create(
         model="llama-8b-8192",
         messages=[
-            {"role": "system", "content": "Search the memory for the answer to a question."},
+            {
+                "role": "system",
+                "content": "Search the memory for the answer to a question.",
+            },
             {"role": "user", "content": question},
             {"role": "system", "content": "Here are some relevant papers:"},
             {"role": "system", "content": "\n\n".join(papers)},
-        ]
+        ],
     )
 
     return response.messages[-1].content
