@@ -3,7 +3,8 @@
 import logging
 
 import pandas as pd
-from config import DATA_DIR, LOGS_DIR
+
+from athena.config import DATA_DIR, LOGS_DIR
 
 SANITIZED_NAMES_FP = DATA_DIR.joinpath("sanitized_names.csv")
 SANITIZED_NAMES_FP.touch(exist_ok=True)
