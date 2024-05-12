@@ -1,4 +1,4 @@
-"""pages/2_Autonomous_Agent.py"""
+"""pages/2_Research_Agent.py"""
 
 import asyncio
 from typing import Any
@@ -12,6 +12,12 @@ from athena.llm.research import breakdown_objective, research_planner, run_agent
 
 st.set_page_config(page_title="Agent", layout="wide")
 
+# Sidebar for uploading starting context
+uploaded_context = st.sidebar.file_uploader("Upload Context", type=['md'])
+if uploaded_context is not None:
+    starting_context = uploaded_context.read().decode("utf-8").splitlines()
+else:
+    starting_context = []
 
 def run_async(async_func, *args) -> Any:
     """
@@ -73,7 +79,7 @@ def run_step(
 if __name__ == "__main__":
     research_objective = st.text_input(
         "Research Objective",
-        "Can protein misfolding be used to treat neurodegenerative diseases?",
+        "Develop an experiment to test the longevity of C elegans under different environmental conditions.",
     )
     start_button = st.button(
         "Start Research",
