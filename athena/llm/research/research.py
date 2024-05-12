@@ -24,7 +24,7 @@ async def run_agent(agent: str, prompt: str, context: str | list[str]) -> str:
     if agent == "wiki":
         return await search_wiki(question=prompt)
 
-    if agent == "summarize":
+    if agent == "research":
         return await summarize_papers(topic=prompt)
 
     if agent == "write":
