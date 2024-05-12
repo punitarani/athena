@@ -12,7 +12,7 @@ async def embed_text(text: str, input_type: str = "search_document") -> list[flo
 
 
 async def embed_texts(
-        texts: list[str], input_type: str = "search_document"
+    texts: list[str], input_type: str = "search_document"
 ) -> list[list[float]]:
     """Embed a list of texts using Cohere's English v3 model."""
     response = await cohere.embed(
