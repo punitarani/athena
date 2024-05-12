@@ -21,8 +21,8 @@ async def search_web(question: str) -> str:
     prediction = await cohere.chat(
         message=question,
         preamble=SEARCH_WEB_PREAMBLE,
-        model="command",
-        temperature=0,
+        model="command-r-plus",
+        temperature=0.2,
         stream=False,
         citation_quality="accurate",
         connectors=[{"id": "web-search"}],
@@ -37,7 +37,7 @@ async def search_wiki(question: str) -> str:
     prediction = await cohere.chat(
         message=question,
         preamble=SEARCH_WIKI_PREAMBLE,
-        model="command",
+        model="command-r-plus",
         temperature=0,
         stream=False,
         citation_quality="accurate",
@@ -62,7 +62,7 @@ async def search_memory(question: str, n: int = 10) -> str:
     )
 
     chat = await cohere.chat(
-        model="command-r",
+        model="command-r-plus",
         message=question,
         documents=[
             {"title": str(doc["metadata"]["doi"]), "snippet": doc["metadata"]["text"]}
