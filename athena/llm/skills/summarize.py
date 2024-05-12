@@ -58,8 +58,9 @@ async def summarize_papers(topic: str, n: int = 5) -> str:
         *(summarize_text(text=text) for work_id, text in texts.items())
     )
 
-    return "\n\n".join(
-        f"{work_id}\n{summary}" for work_id, summary in zip(texts.keys(), summaries)
+    return "\n\n\n\n".join(
+        f"[{works[i].title}]({works[i].id})\n\n{summary}"
+        for i, summary in enumerate(summaries)
     )
 
 
@@ -74,9 +75,10 @@ async def summarize_text(text: str) -> str:
         str: Summary of the paper
     """
 
-    return await cohere.chat(
+    response = await cohere.chat(
         message=text,
         model="command-r",
         temperature=0.2,
         preamble="Summarize the following research paper in detail.",
     )
+    return response.text
